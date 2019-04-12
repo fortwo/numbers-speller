@@ -1,0 +1,29 @@
+.App {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.title h1, .title h6 {
+  margin: 0;
+}
+
+.input-number {
+  color: orange;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  text-align: center;
+  font-size: calc(10px + 8vmin);
+  font-weight: bold;
+}
