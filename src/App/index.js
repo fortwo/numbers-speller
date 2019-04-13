@@ -28,7 +28,7 @@ class App extends React.Component {
   onNumberChange(e) {
     this.setState({
       number: e.target.value,
-      spelling: numberToEnglish(e.target.value),
+      spelling: numberToEnglish(e.target.value.replace(',', '.')),
     });
   }
 
