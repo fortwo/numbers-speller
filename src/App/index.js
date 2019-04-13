@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Utils
-import { splitString } from '../utils';
+import { getPeriodString } from '../utils';
 
 // Style
 import './index.css';
@@ -25,7 +25,7 @@ class App extends React.Component {
   onNumberChange(e) {
     this.setState({
       number: e.target.value,
-      spelling: splitString(e.target.value),
+      spelling: getPeriodString(e.target.value),
     });
   }
 
