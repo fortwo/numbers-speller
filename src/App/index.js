@@ -4,7 +4,7 @@ import React from 'react';
 import { splitString } from '../utils';
 
 // Style
-import './App.css';
+import './index.css';
 
 class App extends React.Component {
   constructor(props) {
@@ -31,10 +31,10 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="app">
         <header className="title">
           <h1>NumberSpeller</h1>
-          <h6>Type a number (up to 2 quadrilion)</h6>
+          <h6>Type a number (up to ±2 quadrillion)</h6>
         </header>
 
         <input
