@@ -1,5 +1,11 @@
 import { strings, tensStrings, thousandsStrings } from './constants';
 
+/**
+ * Split user's input into n-digits groups
+ * @param {String|Number} number User's input
+ * @param {Number} digits The number of digits for each group
+ * @returns {Array} An array of objects containing unit and value
+ */
 export function splitString(number, digits = 3) {
   const groups = [];
 
@@ -22,8 +28,8 @@ export function splitString(number, digits = 3) {
 
 /**
  * Converts a number (<1000) into words
- * @param {string} number The user's input
- * @returns {string} 
+ * @param {String} number The user's input
+ * @returns {String} The correct english spelling for the number
  */
 export function getPeriodString(number, unit) {
   if (number === 0) {
@@ -48,4 +54,43 @@ export function getPeriodString(number, unit) {
   }
 
   return unit ? `${result} ${unit}` : result;
+}
+
+/**
+ * Generate a string representing spelled number (up to 2 quadrillion)
+ * @param {String|Number} number User's input
+ * @returns {String|Error} 
+ */
+export function numberToEnglish(number) {
+  // Check if its a valid number
+  if (isNaN(number)) {
+    throw new Error();
+  }
+
+  // Check zero/null values
+  if (!number || parseInt(number) === 0) {
+    return strings[0];
+  }
+
+  // Check infinity values
+  const abs = Math.abs(number);
+  if (abs > 2e15) {
+    return 'infinity';
+  }
+
+  // Start elaboration
+  const groups = splitString(abs);
+
+  let result = number < 0 ? 'negative' : '';
+  groups.forEach(group => {
+    // Add ' and ' only if the most right digits value is > 0 and < 100 and 
+    result += result !== '' && result !== 'negative' && !group.unit && group.value > 0 && group.value < 100 ? ' and' : '';
+
+    // Add space between periods only if it's necessary
+    result += result !== '' && group.value > 0 ? ' ' : '';
+
+    // Add period string
+    result += getPeriodString(group.value, group.unit);
+  });
+  return result;
 }
