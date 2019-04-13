@@ -57,6 +57,22 @@ export function getPeriodString(number, unit) {
 }
 
 /**
+ * Return the spelling of the decimal part of the user's input
+ * @param {String|Number} number The decimal part of user's input
+ * @returns {String} The correct english spelling for the number
+ */
+export function getDecimalString(number) {
+  let result = '';
+
+  number.split('').forEach(digit => {
+    result += result !== '' ? ' ' : '';
+    result += strings[digit];
+  });
+
+  return result;
+}
+
+/**
  * Generate a string representing spelled number (up to 2 quadrillion)
  * @param {String|Number} number User's input
  * @returns {String|Error} 
@@ -67,19 +83,21 @@ export function numberToEnglish(number) {
     throw new Error();
   }
 
-  // Check zero/null values
-  if (!number || parseInt(number) === 0) {
-    return strings[0];
-  }
-
   // Check infinity values
   const abs = Math.abs(number);
   if (abs > 2e15) {
     return 'infinity';
   }
 
-  // Start elaboration
-  const groups = splitString(abs);
+  const splitted = abs.toString().split('.');
+
+  // Check zero/null values
+  if (!number || (parseInt(abs) === 0 && !splitted[1])) {
+    return strings[0];
+  }
+
+  // Start WHOLE part elaboration
+  const groups = splitString(splitted[0]);
 
   let result = number < 0 ? 'negative' : '';
   groups.forEach(group => {
@@ -92,5 +110,10 @@ export function numberToEnglish(number) {
     // Add period string
     result += getPeriodString(group.value, group.unit);
   });
+
+  // Start DECIMAL part elaboration
+  result += parseInt(splitted[0]) === 0 ? getDecimalString(splitted[0]) : '';
+  result += parseInt(splitted[1]) > 0 ? ` point ${getDecimalString(splitted[1].substring(0, 5))}` : '';
+
   return result;
 }
