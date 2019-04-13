@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Utils
-import { getPeriodString } from '../utils';
+import { numberToEnglish } from '../utils';
 
 // Style
 import './index.css';
@@ -11,11 +11,14 @@ class App extends React.Component {
     super(props);
 
     this.state = {
+      focused: false,
       number: '',
       spelling: '',
     };
 
     this.onNumberChange = this.onNumberChange.bind(this);
+    this.onFocus = this.onFocus.bind(this);
+    this.onBlur = this.onBlur.bind(this);
   }
 
   componentDidMount() {
@@ -25,7 +28,19 @@ class App extends React.Component {
   onNumberChange(e) {
     this.setState({
       number: e.target.value,
-      spelling: getPeriodString(e.target.value),
+      spelling: numberToEnglish(e.target.value),
+    });
+  }
+
+  onFocus() {
+    this.setState({
+      focused: true,
+    });
+  }
+
+  onBlur() {
+    this.setState({
+      focused: false,
     });
   }
 
@@ -34,18 +49,21 @@ class App extends React.Component {
       <div className="app">
         <header className="title">
           <h1>NumberSpeller</h1>
-          <h6>Type a number (up to ±2 quadrillion)</h6>
         </header>
 
-        <input
-          className="input-number"
-          ref={node => this.input = node}
-          type="text"
-          value={this.state.number}
-          onChange={this.onNumberChange}
-        />
+        <div className={`container ${this.state.focused || this.state.number ? 'active' : ''}`}>
+          <label>Type a number (up to ±2 quadrillion)</label>
+          <input
+            ref={node => this.input = node}
+            type="text"
+            value={this.state.number}
+            onChange={this.onNumberChange}
+            onFocus={this.onFocus}
+            onBlur={this.onBlur}
+          />
+        </div>
 
-        {this.state.spelling && <p>{this.state.spelling}</p>}
+        <span className="result">{this.state.spelling}</span>
       </div>
     );
   }
