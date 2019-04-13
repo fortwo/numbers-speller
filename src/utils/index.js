@@ -1,4 +1,4 @@
-import { strings, tensStrings, thousandsStrings } from './constants';
+import { strings, tensStrings, thousandsStrings } from './dictionary';
 
 /**
  * Split user's input into n-digits groups
