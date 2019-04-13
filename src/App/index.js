@@ -19,6 +19,7 @@ class App extends React.Component {
     this.onNumberChange = this.onNumberChange.bind(this);
     this.onFocus = this.onFocus.bind(this);
     this.onBlur = this.onBlur.bind(this);
+    this.readNumber = this.readNumber.bind(this);
   }
 
   componentDidMount() {
@@ -44,6 +45,12 @@ class App extends React.Component {
     });
   }
 
+  readNumber() {
+    if (this.state.number) {
+      window.responsiveVoice.speak(this.state.spelling);
+    }
+  }
+
   render() {
     return (
       <div className="app">
@@ -64,6 +71,10 @@ class App extends React.Component {
         </div>
 
         <span className="result">{this.state.spelling}</span>
+
+        <div className={`read-button ${this.state.number ? '' : 'disabled'}`} onClick={this.readNumber}>
+          Read number
+        </div>
       </div>
     );
   }

@@ -60,3 +60,22 @@
   width: 75%;
   text-align: center;
 }
+
+.read-button {
+  font-size: 12px;
+  padding: 16px;
+  border: 1px solid orange;
+  color: orange;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.read-button:hover {
+  color: #282c34;
+  background-color: orange;
+  cursor: pointer;
+}
+
+.read-button.disabled {
+  cursor: not-allowed;
+}
