@@ -14,6 +14,7 @@ class App extends React.Component {
       focused: false,
       number: '',
       spelling: '',
+      error: false,
     };
 
     this.onNumberChange = this.onNumberChange.bind(this);
@@ -27,9 +28,20 @@ class App extends React.Component {
   }
 
   onNumberChange(e) {
+    const number = e.target.value;
+    let spelling = '';
+    let error = false;
+
+    try {
+      spelling = numberToEnglish(number.replace(',', '.')); // Support both dot and commas as decimal separator
+    } catch (e) {
+      error = true;
+    }
+
     this.setState({
-      number: e.target.value,
-      spelling: numberToEnglish(e.target.value.replace(',', '.')),
+      number,
+      spelling,
+      error,
     });
   }
 
@@ -52,27 +64,33 @@ class App extends React.Component {
   }
 
   render() {
+    const { focused, number, spelling, error } = this.state;
+
     return (
       <div className="app">
         <header className="title">
           <h1>NumberSpeller</h1>
         </header>
 
-        <div className={`container ${this.state.focused || this.state.number ? 'active' : ''}`}>
+        <div className={`container ${focused || number ? 'active' : ''}`}>
           <label>Type a number (up to ±2 quadrillion)</label>
           <input
             ref={node => this.input = node}
             type="text"
-            value={this.state.number}
+            value={number}
             onChange={this.onNumberChange}
             onFocus={this.onFocus}
             onBlur={this.onBlur}
           />
         </div>
 
-        <span className="result">{this.state.spelling}</span>
+        {error ?
+          <span className="error">Sorry, that's not a valid number</span>
+          :
+          <span className="result">{spelling}</span>
+        }
 
-        <div className={`read-button ${this.state.number ? '' : 'disabled'}`} onClick={this.readNumber}>
+        <div className={`read-button ${number ? '' : 'disabled'}`} onClick={this.readNumber}>
           Read number
         </div>
       </div>

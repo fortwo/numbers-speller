@@ -53,12 +53,16 @@
   z-index: 1;
 }
 
-.result {
+.result, .error {
   padding: 16px;
   font-size: calc(10px + 2vmin);
   min-height: 60px;
   width: 75%;
   text-align: center;
+}
+
+.error {
+  color: red;
 }
 
 .read-button {
