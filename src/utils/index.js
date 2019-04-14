@@ -76,11 +76,13 @@ export function getDecimalString(number) {
 }
 
 /**
- * Generate a string representing the word name of the number (up to ±2 quadrillion)
+ * Generate a string representing the word name of the number, up to a custom limit
+ * limit is set to ±2 quadrillion by default
+ * max limit is 9007199254740991, JavaScript MAX_SAFE_INTEGER
  * @param {String|Number} number User's input
- * @returns {String|Error} 
+ * @returns {String|Error} If limit is excedeed returns an error, otherwise a string 
  */
-export function numberToEnglish(number) {
+export function numberToEnglish(number, limit = 2e15) {
   // Check if its a valid number
   if (isNaN(number)) {
     throw new Error();
@@ -88,7 +90,7 @@ export function numberToEnglish(number) {
 
   // Check infinity values
   const abs = Math.abs(number);
-  if (abs > 2e15) {
+  if (abs > limit || abs > Number.MAX_SAFE_INTEGER) {
     return 'infinity';
   }
 
