@@ -66,17 +66,20 @@ class App extends React.Component {
   render() {
     const { focused, number, spelling, error } = this.state;
 
+    const placeholder = 'Type a number';
+
     return (
       <div className="app">
         <header className="title">
           <h1>NumberSpeller</h1>
         </header>
 
-        <div className={`container ${focused || number ? 'active' : ''}`}>
-          <label>Type a number (up to ±2 quadrillion)</label>
+        <div className="container">
+          <label className={focused && number ? 'active' : ''}>{placeholder}</label>
           <input
             ref={node => this.input = node}
             type="text"
+            placeholder={placeholder}
             value={number}
             onChange={this.onNumberChange}
             onFocus={this.onFocus}
@@ -84,10 +87,10 @@ class App extends React.Component {
           />
         </div>
 
-        {error ?
+        {error ? 
           <span className="error">Sorry, that's not a valid number</span>
-          :
-          <span className="result">{spelling}</span>
+        :
+          <span className="result">{number ? spelling : ''}</span>
         }
 
         <div className={`read-button ${number ? '' : 'disabled'}`} onClick={this.readNumber}>
