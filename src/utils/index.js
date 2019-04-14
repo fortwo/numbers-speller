@@ -1,10 +1,10 @@
-import { strings, tensStrings, thousandsStrings } from './dictionary';
+import { digitStrings, tenStrings, periodStrings } from './dictionary';
 
 /**
  * Split user's input into n-digits groups
  * @param {String|Number} number User's input
  * @param {Number} digits The number of digits for each group
- * @returns {Array} An array of objects containing unit and value
+ * @returns {Array} An array of objects containing the thousand group and value
  */
 export function splitString(number, digits = 3) {
   const groups = [];
@@ -17,7 +17,7 @@ export function splitString(number, digits = 3) {
     const firstIndex = index - digits >= 0 ? index - digits : 0;
     groups.unshift({
       value: parseInt(string.substring(firstIndex, index)),
-      unit: thousandsStrings[iteration],
+      unit: periodStrings[iteration],
     });
     index -= digits;
     iteration++;
@@ -29,7 +29,8 @@ export function splitString(number, digits = 3) {
 /**
  * Converts a number (<1000) into words
  * @param {String} number The user's input
- * @returns {String} The correct english spelling for the number
+ * @param {String} unit A string representing the thousands group (e.g. 'thousand', 'million', 'billion')
+ * @returns {String} The correct word name of the number
  */
 export function getPeriodString(number, unit) {
   if (number === 0) {
@@ -40,17 +41,19 @@ export function getPeriodString(number, unit) {
   const rest = parseInt(number % 100);
 
   let result = '';
-  result += hundreds > 0 ? `${strings[hundreds]} hundred` : '';
+  result += hundreds > 0 ? `${digitStrings[hundreds]} hundred` : '';
   result += hundreds > 0 && rest > 0 ? ' and ' : '';
 
-  if (rest >= 20) {
+  // rest is < 20
+  result += rest > 0 ? digitStrings[rest] || '' : '';
+
+  // rest is >= 20
+  if (!digitStrings[rest]) {
     const tens = parseInt(rest / 10);
     const units = parseInt(rest % 10);
-    result += tens > 0 ? `${tensStrings[tens]}` : '';
+    result += tens > 0 ? `${tenStrings[tens]}` : '';
     result += tens > 0 && units > 0 ? '-' : '';
-    result += units > 0 ? `${strings[units]}` : '';
-  } else if (rest > 0) {
-    result += strings[rest];
+    result += units > 0 ? `${digitStrings[units]}` : '';
   }
 
   return unit ? `${result} ${unit}` : result;
@@ -59,21 +62,21 @@ export function getPeriodString(number, unit) {
 /**
  * Return the spelling of the decimal part of the user's input
  * @param {String|Number} number The decimal part of user's input
- * @returns {String} The correct english spelling for the number
+ * @returns {String} The correct word name of the number
  */
 export function getDecimalString(number) {
   let result = '';
 
   number.split('').forEach(digit => {
     result += result !== '' ? ' ' : '';
-    result += strings[digit];
+    result += digitStrings[digit];
   });
 
   return result;
 }
 
 /**
- * Generate a string representing spelled number (up to 2 quadrillion)
+ * Generate a string representing the word name of the number (up to ±2 quadrillion)
  * @param {String|Number} number User's input
  * @returns {String|Error} 
  */
@@ -89,14 +92,15 @@ export function numberToEnglish(number) {
     return 'infinity';
   }
 
+  // Split into WHOLE and DECIMAL
   const splitted = abs.toString().split('.');
 
   // Check zero/null values
   if (!number || (parseInt(abs) === 0 && !splitted[1])) {
-    return strings[0];
+    return digitStrings[0];
   }
 
-  // Start WHOLE part elaboration
+  // Start WHOLE elaboration
   const groups = splitString(splitted[0]);
 
   let result = number < 0 ? 'negative' : '';
@@ -111,7 +115,7 @@ export function numberToEnglish(number) {
     result += getPeriodString(group.value, group.unit);
   });
 
-  // Start DECIMAL part elaboration
+  // Start DECIMAL elaboration
   result += parseInt(splitted[0]) === 0 ? getDecimalString(splitted[0]) : '';
   result += parseInt(splitted[1]) > 0 ? ` point ${getDecimalString(splitted[1].substring(0, 5))}` : '';
 

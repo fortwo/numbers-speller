@@ -1,4 +1,4 @@
-export const strings = {
+export const digitStrings = {
   0: 'zero',
   1: 'one',
   2: 'two',
@@ -21,7 +21,7 @@ export const strings = {
   19: 'nineteen',
 };
 
-export const tensStrings = {
+export const tenStrings = {
   2: 'twenty',
   3: 'thirty',
   4: 'fourty',
@@ -32,7 +32,7 @@ export const tensStrings = {
   9: 'ninety',
 };
 
-export const thousandsStrings = {
+export const periodStrings = {
   1: 'thousand',
   2: 'million',
   3: 'billion',
